@@ -1,1 +1,13 @@
-<manifest package="com.coubic.browser"/>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.coubic.browser">
+
+    <application>
+
+        <activity
+            android:name="com.coubic.browser.WebViewActivity"
+            android:exported="true"
+            android:theme="@style/DefaultWebViewTheme" />
+
+    </application>
+
+</manifest>
