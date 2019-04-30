@@ -68,6 +68,7 @@ android {
 
 dependencies {
     implementation project(":browser")
+//    implementation "com.github.coubic:android-browser:0.1.1"
 
     implementation Depends.Kotlin.stdlib
 
