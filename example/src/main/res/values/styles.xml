@@ -1,0 +1,21 @@
+<resources>
+
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorAccent">@color/accent</item>
+    </style>
+
+    <style name="AppTheme.WebView">
+        <item name="android:statusBarColor">@color/primary_dark</item>
+        <item name="toolbarStyle">@style/WebViewToolbar</item>
+        <item name="titleTextColor">@color/white</item>
+    </style>
+
+    <style name="WebViewToolbar" parent="Widget.AppCompat.Toolbar">
+        <item name="android:background">@color/primary</item>
+        <item name="titleTextColor">@color/white</item>
+        <item name="subtitleTextColor">@color/text_grey_alpha_50</item>
+    </style>
+
+</resources>
