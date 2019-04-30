@@ -23,6 +23,7 @@ class WebViewActivity : AppCompatActivity() {
         private const val EXTRA_URL = "url"
         private const val EXTRA_ACCESS_TOKEN = "accessToken"
 
+        @JvmStatic
         fun createIntent(
             context: Context,
             url: String,
