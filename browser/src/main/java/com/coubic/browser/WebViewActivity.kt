@@ -9,19 +9,20 @@ import android.util.TypedValue
 import android.view.MotionEvent
 import android.view.View
 import android.webkit.*
+import android.widget.FrameLayout
 import androidx.annotation.AttrRes
 import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil
-import com.coubic.browser.databinding.WebViewActivityBinding
+import androidx.appcompat.widget.Toolbar
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 
 
 class WebViewActivity : AppCompatActivity() {
 
     companion object {
-        private const val EXTRA_TITLE = "title"
-        private const val EXTRA_SUBTITLE = "subtitle"
-        private const val EXTRA_URL = "url"
-        private const val EXTRA_ACCESS_TOKEN = "accessToken"
+        const val EXTRA_TITLE = "title"
+        const val EXTRA_SUBTITLE = "subtitle"
+        const val EXTRA_URL = "url"
+        const val EXTRA_ACCESS_TOKEN = "accessToken"
 
         @JvmStatic
         fun createIntent(
@@ -42,13 +43,11 @@ class WebViewActivity : AppCompatActivity() {
 
     private var enableSwipeRefresh = false
 
-    private lateinit var binding: WebViewActivityBinding
-
     private lateinit var webView: WebView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.web_view_activity)
+        setContentView(R.layout.web_view_activity)
 
         setUpToolbar(
             intent.getStringExtra(EXTRA_TITLE),
@@ -64,7 +63,7 @@ class WebViewActivity : AppCompatActivity() {
     }
 
     private fun setUpToolbar(title: String?, subtitle: String?) {
-        binding.toolbar.apply {
+        findViewById<Toolbar>(R.id.toolbar).apply {
             if (title != null) this.title = title
             if (subtitle != null) this.subtitle = subtitle
             setNavigationOnClickListener { finish() }
@@ -72,7 +71,7 @@ class WebViewActivity : AppCompatActivity() {
     }
 
     private fun setUpSwipeRefresh() {
-        binding.swipeRefresh.apply {
+        findViewById<SwipeRefreshLayout>(R.id.swipe_refresh).apply {
             setColorSchemeColors(getColorFromAttr(R.attr.colorPrimary))
             setOnRefreshListener { webView.reload() }
             setOnChildScrollUpCallback { _, _ -> webView.scrollY != 0 || !enableSwipeRefresh }
@@ -110,7 +109,7 @@ class WebViewActivity : AppCompatActivity() {
             }
         }
 
-        binding.container.addView(webView)
+        findViewById<FrameLayout>(R.id.container).addView(webView)
 
         webView.setOnTouchListener { _, motionEvent ->
             when (motionEvent.action) {
@@ -128,18 +127,18 @@ class WebViewActivity : AppCompatActivity() {
         webView.webChromeClient = WebChromeClient()
         webView.webViewClient = object : WebViewClient() {
             override fun onPageStarted(view: WebView, url: String, favicon: Bitmap?) {
-                binding.loading.visibility = View.VISIBLE
-                binding.swipeRefresh.visibility = View.GONE
+                findViewById<FrameLayout>(R.id.loading).visibility = View.VISIBLE
+                findViewById<SwipeRefreshLayout>(R.id.swipe_refresh).visibility = View.GONE
             }
 
             override fun onPageFinished(view: WebView, url: String) {
                 super.onPageFinished(view, url)
-                binding.swipeRefresh.visibility = View.VISIBLE
-                binding.loading.visibility = View.GONE
-                binding.swipeRefresh.isRefreshing = false
+                findViewById<SwipeRefreshLayout>(R.id.swipe_refresh).visibility = View.VISIBLE
+                findViewById<FrameLayout>(R.id.loading).visibility = View.GONE
+                findViewById<SwipeRefreshLayout>(R.id.swipe_refresh).isRefreshing = false
 
                 if (intent.getStringExtra(EXTRA_TITLE) == null) {
-                    binding.toolbar.title = view.title
+                    findViewById<Toolbar>(R.id.toolbar).title = view.title
                 }
             }
 

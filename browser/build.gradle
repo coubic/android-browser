@@ -5,11 +5,10 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 
-apply from: "$rootDir/browser/app-version.gradle"
+apply from: "$rootDir/gradle/app-version.gradle"
 
 android {
     compileSdkVersion Versions.androidCompileSdkVersion
-    dataBinding.enabled = true
     defaultConfig {
         minSdkVersion Versions.androidMinSdkVersion
         targetSdkVersion Versions.androidTargetSdkVersion
@@ -31,16 +30,6 @@ android {
             debuggable false
             zipAlignEnabled true
             minifyEnabled true
-        }
-    }
-
-    // For CI
-    dexOptions {
-        if (System.getenv("CI") as boolean) {
-            javaMaxHeapSize "2400M"
-            maxProcessCount 1
-            threadCount 1
-            preDexLibraries false
         }
     }
 

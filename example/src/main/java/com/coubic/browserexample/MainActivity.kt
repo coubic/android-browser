@@ -1,5 +1,6 @@
 package com.coubic.browserexample
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -15,13 +16,18 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
 
         binding.openBrowser.setOnClickListener {
-            startActivity(
-                WebViewActivity.createIntent(
-                    this,
-                    "https://github.com/coubic/android-browser",
-                    "Coubic Custom Browser"
-                )
-            )
+            val intent = Intent(this, WebViewActivity::class.java).apply {
+                putExtra("url", "https://github.com/coubic/android-browser")
+                putExtra("title", "Coubic Custom Browser")
+            }
+            startActivity(intent)
+//            startActivity(
+//                WebViewActivity.createIntent(
+//                    this,
+//                    "https://github.com/coubic/android-browser",
+//                    "Coubic Custom Browser"
+//                )
+//            )
         }
     }
 
