@@ -1,6 +1,8 @@
 package com.coubic.browser
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.util.TypedValue
@@ -12,13 +14,30 @@ import androidx.annotation.AttrRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.coubic.browser.WebViewActivityFactory.Companion.EXTRA_ACCESS_TOKEN
-import com.coubic.browser.WebViewActivityFactory.Companion.EXTRA_SUBTITLE
-import com.coubic.browser.WebViewActivityFactory.Companion.EXTRA_TITLE
-import com.coubic.browser.WebViewActivityFactory.Companion.EXTRA_URL
-
 
 class WebViewActivity : AppCompatActivity() {
+
+    companion object {
+        const val EXTRA_TITLE = "title"
+        const val EXTRA_SUBTITLE = "subtitle"
+        const val EXTRA_URL = "url"
+        const val EXTRA_ACCESS_TOKEN = "accessToken"
+
+        fun createIntent(
+            context: Context,
+            url: String,
+            title: String? = null,
+            subtitle: String? = null,
+            token: String? = null
+        ): Intent {
+            return Intent(context, WebViewActivity::class.java).apply {
+                putExtra(EXTRA_URL, url)
+                putExtra(EXTRA_TITLE, title)
+                putExtra(EXTRA_SUBTITLE, subtitle)
+                if (token != null) putExtra(EXTRA_ACCESS_TOKEN, token)
+            }
+        }
+    }
 
     private var enableSwipeRefresh = false
 

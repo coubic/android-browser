@@ -5,7 +5,6 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.coubic.browser.WebViewActivity
-import com.coubic.browserexample.databinding.MainActivityBinding
 
 class MainActivity : AppCompatActivity() {
 
