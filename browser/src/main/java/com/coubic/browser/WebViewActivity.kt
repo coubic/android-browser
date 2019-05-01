@@ -18,15 +18,11 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 
 class WebViewActivity : AppCompatActivity() {
 
-    companion object {
-        @JvmField
-        val EXTRA_TITLE = "title"
-        @JvmField
-        val EXTRA_SUBTITLE = "subtitle"
-        @JvmField
-        val EXTRA_URL = "url"
-        @JvmField
-        val EXTRA_ACCESS_TOKEN = "accessToken"
+    companion object Factory {
+        const val EXTRA_TITLE = "title"
+        const val EXTRA_SUBTITLE = "subtitle"
+        const val EXTRA_URL = "url"
+        const val EXTRA_ACCESS_TOKEN = "accessToken"
 
         @JvmStatic
         fun createIntent(
