@@ -12,10 +12,10 @@ import androidx.annotation.AttrRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.coubic.browser.WebViewActivityFactory.EXTRA_ACCESS_TOKEN
-import com.coubic.browser.WebViewActivityFactory.EXTRA_SUBTITLE
-import com.coubic.browser.WebViewActivityFactory.EXTRA_TITLE
-import com.coubic.browser.WebViewActivityFactory.EXTRA_URL
+import com.coubic.browser.WebViewActivityFactory.Companion.EXTRA_ACCESS_TOKEN
+import com.coubic.browser.WebViewActivityFactory.Companion.EXTRA_SUBTITLE
+import com.coubic.browser.WebViewActivityFactory.Companion.EXTRA_TITLE
+import com.coubic.browser.WebViewActivityFactory.Companion.EXTRA_URL
 
 
 class WebViewActivity : AppCompatActivity() {

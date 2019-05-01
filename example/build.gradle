@@ -69,7 +69,7 @@ android {
 
 dependencies {
     implementation project(":browser")
-//    implementation "com.github.coubic:android-browser:0.1.8"
+//    implementation "com.github.coubic:android-browser:0.1.9"
 
     implementation Depends.Kotlin.stdlib
 
@@ -81,4 +81,5 @@ dependencies {
     // Test
     testImplementation Depends.Test.junit
     androidTestImplementation Depends.Test.testRunner
+    compile project(path: ':browser')
 }
