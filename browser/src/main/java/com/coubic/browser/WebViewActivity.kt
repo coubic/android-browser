@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
+import android.os.Message
 import android.util.TypedValue
 import android.view.MotionEvent
 import android.view.View
@@ -22,19 +23,22 @@ class WebViewActivity : AppCompatActivity() {
         const val EXTRA_SUBTITLE = "subtitle"
         const val EXTRA_URL = "url"
         const val EXTRA_ACCESS_TOKEN = "accessToken"
+        const val EXTRA_MULTIPLE_WINDOWS = "multipleWindows"
 
         fun createIntent(
             context: Context,
             url: String,
             title: String? = null,
             subtitle: String? = null,
-            token: String? = null
+            token: String? = null,
+            multipleWindows: Boolean = false
         ): Intent {
             return Intent(context, WebViewActivity::class.java).apply {
                 putExtra(EXTRA_URL, url)
                 putExtra(EXTRA_TITLE, title)
                 putExtra(EXTRA_SUBTITLE, subtitle)
                 if (token != null) putExtra(EXTRA_ACCESS_TOKEN, token)
+                putExtra(EXTRA_MULTIPLE_WINDOWS, multipleWindows)
             }
         }
     }
@@ -54,7 +58,8 @@ class WebViewActivity : AppCompatActivity() {
 
         setUpWebView(
             intent.getStringExtra(EXTRA_URL),
-            intent.getStringExtra(EXTRA_ACCESS_TOKEN)
+            intent.getStringExtra(EXTRA_ACCESS_TOKEN),
+            intent.getBooleanExtra(EXTRA_MULTIPLE_WINDOWS, false)
         )
 
         setUpSwipeRefresh()
@@ -94,7 +99,7 @@ class WebViewActivity : AppCompatActivity() {
     }
 
     @SuppressLint("ClickableViewAccessibility", "SetJavaScriptEnabled")
-    private fun setUpWebView(url: String, accessToken: String?) {
+    private fun setUpWebView(url: String, accessToken: String?, multipleWindows: Boolean) {
         webView = object : WebView(this) {
             override fun onOverScrolled(
                 scrollX: Int,
@@ -120,9 +125,42 @@ class WebViewActivity : AppCompatActivity() {
             javaScriptEnabled = true
             domStorageEnabled = true
             setAppCacheEnabled(true)
+            setSupportMultipleWindows(multipleWindows)
         }
 
-        webView.webChromeClient = WebChromeClient()
+        webView.webChromeClient = object : WebChromeClient() {
+            override fun onCreateWindow(
+                view: WebView?,
+                isDialog: Boolean,
+                isUserGesture: Boolean,
+                resultMsg: Message?
+            ): Boolean {
+                view?:return false
+                resultMsg?:return false
+
+                val newWindowWebView = WebView(this@WebViewActivity)
+                view.addView(newWindowWebView)
+
+                val transport     = resultMsg.obj as WebView.WebViewTransport
+                transport.webView = newWindowWebView
+                resultMsg.sendToTarget()
+
+                newWindowWebView.webViewClient = object : WebViewClient() {
+                    override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
+                        val uri = request?.url
+                        uri?:return false
+
+                        val browserIntent  = Intent(Intent.ACTION_VIEW)
+                        browserIntent.data = uri
+                        startActivity(browserIntent)
+
+                        return true
+                    }
+                }
+                return true
+            }
+        }
+
         webView.webViewClient = object : WebViewClient() {
             override fun onPageStarted(view: WebView, url: String, favicon: Bitmap?) {
                 findViewById<FrameLayout>(R.id.loading).visibility = View.VISIBLE
