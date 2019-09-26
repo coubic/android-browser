@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
 import android.os.Message
 import android.util.TypedValue
@@ -12,6 +13,7 @@ import android.view.View
 import android.webkit.*
 import android.widget.FrameLayout
 import androidx.annotation.AttrRes
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -167,6 +169,18 @@ class WebViewActivity : AppCompatActivity() {
                 findViewById<SwipeRefreshLayout>(R.id.swipe_refresh).visibility = View.GONE
             }
 
+            override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
+                val uri = request?.url
+                uri?:return false
+
+                if (uri.scheme.startsWith("tel:")) {
+                    handleTelScheme(uri)
+                    return true
+                }
+
+                return super.shouldOverrideUrlLoading(view, request)
+            }
+
             override fun onPageFinished(view: WebView, url: String) {
                 super.onPageFinished(view, url)
                 findViewById<SwipeRefreshLayout>(R.id.swipe_refresh).visibility = View.VISIBLE
@@ -190,5 +204,18 @@ class WebViewActivity : AppCompatActivity() {
 
         val headers = if (accessToken != null) mapOf("Access-Token" to accessToken) else null
         webView.loadUrl(url, headers)
+    }
+
+    private fun handleTelScheme(uri: Uri) {
+        val builder = AlertDialog.Builder(this)
+        builder.setMessage(uri.host)
+        builder.setPositiveButton(R.string.call_tel) { dialog, which ->
+            val intent = Intent(Intent.ACTION_DIAL, uri)
+            startActivity(intent)
+        }
+        builder.setNegativeButton(android.R.string.cancel) { dialog, which ->
+            // do nothing
+        }
+        builder.show()
     }
 }
