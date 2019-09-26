@@ -173,9 +173,11 @@ class WebViewActivity : AppCompatActivity() {
                 val uri = request?.url
                 uri?:return false
 
-                if (uri.scheme.startsWith("tel:")) {
-                    handleTelScheme(uri)
-                    return true
+                when(uri.scheme) {
+                    "tel" -> {
+                        handleTelScheme(uri)
+                        return true
+                    }
                 }
 
                 return super.shouldOverrideUrlLoading(view, request)
@@ -208,12 +210,12 @@ class WebViewActivity : AppCompatActivity() {
 
     private fun handleTelScheme(uri: Uri) {
         val builder = AlertDialog.Builder(this)
-        builder.setMessage(uri.host)
-        builder.setPositiveButton(R.string.call_tel) { dialog, which ->
+        builder.setMessage(uri.toString().replace("tel:",""))
+        builder.setPositiveButton(R.string.call_tel) { _, _ ->
             val intent = Intent(Intent.ACTION_DIAL, uri)
             startActivity(intent)
         }
-        builder.setNegativeButton(android.R.string.cancel) { dialog, which ->
+        builder.setNegativeButton(android.R.string.cancel) { _, _ ->
             // do nothing
         }
         builder.show()
